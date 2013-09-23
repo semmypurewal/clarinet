@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# java -jar ./compiler.jar --js ../../clarinet.js exports.js --externs externs.js --js_output_file clarinet.min.js --compilation_level ADVANCED_OPTIMIZATIONS --formatting=PRETTY_PRINT
+
+# java -jar ./compiler.jar --js "var msg = 'hello world'; console.log(msg)" --js_output_file test.min.js
+
+(cat ../../clarinet.js;echo "
+var test = clarinet.parser();
+test.write('{hello');
+test.end();
+test.resume();
+test.close();
+") | java -jar compiler.jar --externs externs.js --compilation_level ADVANCED_OPTIMIZATIONS > clarinet.min.js
+
+
