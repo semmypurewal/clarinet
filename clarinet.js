@@ -98,12 +98,15 @@ if(typeof FastList === 'function') {
   function checkBufferLength (parser) {
     var maxAllowed = Math.max(clarinet.MAX_BUFFER_LENGTH, 10)
       , maxActual = 0
+      , buffers = parser.buffers
       ;
     for (var i = 0, l = buffers.length; i < l; i ++) {
-      var len = parser[buffers[i]].length;
+      var len = buffers[i].length;
       if (len > maxAllowed) {
         switch (buffers[i]) {
+          // unreachable code
           case "text":
+            // closeText is undefined
             closeText(parser);
           break;
 
@@ -118,8 +121,8 @@ if(typeof FastList === 'function') {
   }
 
   function clearBuffers (parser) {
-    for (var i = 0, l = buffers.length; i < l; i ++) {
-      parser[buffers[i]] = "";
+    for(var i = 0, l = parser.buffers.length; i < l; i++) {
+      parser.buffers[i] = "";
     }
   }
 
@@ -129,7 +132,9 @@ if(typeof FastList === 'function') {
     if (!(this instanceof CParser)) return new CParser (opt);
 
     var parser = this;
-    clearBuffers(parser);
+    parser.textNode = "";
+    parser.numberNode = "";
+    parser.buffers = [ parser.textNode, parser.numberNode ];
     parser.bufferCheckPosition = clarinet.MAX_BUFFER_LENGTH;
     parser.q        = parser.c = parser.p = "";
     parser.opt      = opt || {};
